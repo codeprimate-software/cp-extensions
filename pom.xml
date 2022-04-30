@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.codeprimate</groupId>
+		<artifactId>cp-core</artifactId>
+		<version>1.8.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>cp-extensions</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>Codeprimate Extensions</name>
+	<description>
+		This is the parent project to all Codeprimate Extensions, which provides extensions to various 3rd-party
+		Java libraries and frameworks commonly used to build applications in Java. Additionally, Extensions provides
+		integrations between other Codeprimate projects, such as Elements, alongside 3rd-party Java libraries
+		and frameworks. These integrations will most likely occur as Adapters to the underlying library or framework.
+	</description>
+
+	<modules>
+		<module>spring-extensions</module>
+	</modules>
+
+	<properties>
+		<java-module-name>org.codeprimate.extensions</java-module-name>
+		<cp-elements.version>1.0.0-M7</cp-elements.version>
+	</properties>
+
+	<dependencyManagement>
+
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.codeprimate</groupId>
+			<artifactId>cp-elements</artifactId>
+			<version>${cp-elements.version}</version>
+		</dependency>
+	</dependencies>
+
+</project>
