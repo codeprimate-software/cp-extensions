@@ -20,9 +20,13 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+
+import java.util.function.Consumer;
 
 import org.junit.Test;
 
@@ -30,6 +34,7 @@ import org.assertj.core.api.InstanceOfAssertFactories;
 
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyValue;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.core.Ordered;
@@ -98,6 +103,44 @@ public class SpringSupportUnitTests {
 			.withNoCause();
 	}
 
+	@Test
+	public void beanInitializedCorrectly() throws Exception {
+
+		InitializingBean bean = mock(InitializingBean.class);
+
+		Consumer<Object> consumer = SpringSupport.beanInitializer();
+
+		assertThat(consumer).isNotNull();
+
+		consumer.accept(bean);
+
+		verify(bean, times(1)).afterPropertiesSet();
+		verifyNoMoreInteractions(bean);
+	}
+
+	@Test
+	public void beanInitializerIgnoresNonInitializingBean() {
+
+		Object bean = spy(new Object());
+
+		Consumer<Object> consumer = SpringSupport.beanInitializer();
+
+		assertThat(consumer).isNotNull();
+
+		consumer.accept(bean);
+
+		verifyNoInteractions(bean);
+	}
+
+	@Test
+	public void baenInitializerIsNullSafe() {
+
+		Consumer<Object> consumer = SpringSupport.beanInitializer();
+
+		assertThat(consumer).isNotNull();
+
+		consumer.accept(null);
+	}
 	@Test
 	public void dereferencBeanWithBlankNameThrowsIllegalArgumentException() {
 

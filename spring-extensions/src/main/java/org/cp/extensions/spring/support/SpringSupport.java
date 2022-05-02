@@ -19,14 +19,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import org.cp.elements.lang.Assert;
+import org.cp.elements.lang.ObjectUtils;
 import org.cp.elements.lang.annotation.NullSafe;
 import org.cp.elements.util.ArrayUtils;
 import org.cp.elements.util.CollectionUtils;
 
 import org.springframework.beans.PropertyValue;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.core.Ordered;
@@ -68,6 +71,22 @@ public abstract class SpringSupport {
 		}
 
 		return beanDefinition;
+	}
+
+	/**
+	 * Factory method used to initialize a bean if the bean implements the {@link InitializingBean} interface.
+	 *
+	 * @return a {@link Consumer} used to initialize a Spring managed bean.
+	 * @see org.springframework.beans.factory.InitializingBean
+	 * @see java.util.function.Consumer
+	 */
+	public static @NonNull Consumer<Object> beanInitializer() {
+
+		return bean -> {
+			if (bean instanceof InitializingBean) {
+				ObjectUtils.doOperationSafely(it -> { ((InitializingBean) bean).afterPropertiesSet(); return null; });
+			}
+		};
 	}
 
 	/**
