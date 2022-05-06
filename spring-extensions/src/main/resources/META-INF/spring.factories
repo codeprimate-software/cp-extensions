@@ -1,0 +1,4 @@
+# spring.factories configuration file used to configure and customize the Spring TestContext framework.
+
+org.springframework.test.context.ContextCustomizerFactory=\
+	org.cp.extensions.spring.test.context.DependencyOfContextCustomizerFactory
