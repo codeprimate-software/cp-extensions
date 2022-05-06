@@ -15,8 +15,11 @@
  */
 package org.cp.extensions.spring.context.annotation;
 
+import org.cp.elements.lang.annotation.NullSafe;
+
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.lang.Nullable;
 
 /**
  * Spring {@link ApplicationContextInitializer} used to enable {@link DependencyOf} annotation declarations.
@@ -36,12 +39,13 @@ public class DependencyOfApplicationContextInitializer implements ApplicationCon
 	 * @param applicationContext {@link ConfigurableApplicationContext} to initialize.
 	 * @see org.springframework.context.ConfigurableApplicationContext
 	 */
+	@NullSafe
 	@Override
 	@SuppressWarnings("all")
-	public void initialize(ConfigurableApplicationContext applicationContext) {
+	public void initialize(@Nullable ConfigurableApplicationContext applicationContext) {
 
 		if (applicationContext != null) {
-			applicationContext.addBeanFactoryPostProcessor(new DependencyOfBeanFactoryPostProcessor());
+			DependencyOfBeanFactoryPostProcessor.registerWith(applicationContext);
 		}
 	}
 }
