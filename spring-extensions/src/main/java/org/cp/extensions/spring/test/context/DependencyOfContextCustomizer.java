@@ -49,8 +49,8 @@ public class DependencyOfContextCustomizer implements ContextCustomizer {
 	 */
 	@Override
 	public void customizeContext(@NonNull ConfigurableApplicationContext applicationContext,
-			MergedContextConfiguration mergedConfig) {
+			@NonNull MergedContextConfiguration mergedConfig) {
 
-		applicationContext.addBeanFactoryPostProcessor(new DependencyOfBeanFactoryPostProcessor());
+		DependencyOfBeanFactoryPostProcessor.registerWith(applicationContext);
 	}
 }
