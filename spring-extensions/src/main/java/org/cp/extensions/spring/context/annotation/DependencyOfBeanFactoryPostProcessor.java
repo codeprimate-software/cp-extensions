@@ -16,8 +16,11 @@
 package org.cp.extensions.spring.context.annotation;
 
 import java.lang.annotation.Annotation;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.cp.elements.lang.Assert;
 import org.cp.elements.lang.StringUtils;
 import org.cp.elements.util.ArrayUtils;
 import org.cp.extensions.spring.support.SpringSupport;
@@ -26,6 +29,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -48,9 +52,40 @@ import org.springframework.lang.Nullable;
 @SuppressWarnings("unused")
 public class DependencyOfBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
+	public static final DependencyOfBeanFactoryPostProcessor INSTANCE = new DependencyOfBeanFactoryPostProcessor();
+
 	protected static final Class<? extends Annotation> DEPENDENCY_OF_TYPE = DependencyOf.class;
 
 	protected static final String VALUE_ATTRIBUTE_NAME = "value";
+
+	private static final Map<ConfigurableApplicationContext, DependencyOfBeanFactoryPostProcessor> registrations =
+		new ConcurrentHashMap<>();
+
+	/**
+	 * Null-safe factory method used to register an instance of the {@link DependencyOfBeanFactoryPostProcessor} with
+	 * the given, required {@link ConfigurableApplicationContext}.
+	 *
+	 * The {@code registerWith(..)} factory method ensures only a single registration of
+	 * the {@link DependencyOfBeanFactoryPostProcessor} per {@link ConfigurableApplicationContext}.
+	 *
+	 * @param <T> {@link Class type} of {@link ConfigurableApplicationContext}.
+	 * @param applicationContext {@link ConfigurableApplicationContext} on which to register an instance of
+	 * the {@link DependencyOfBeanFactoryPostProcessor}; must not be {@literal null}.
+	 * @return the given {@link ConfigurableApplicationContext}.
+	 * @throws IllegalArgumentException if {@link ConfigurableApplicationContext} is {@literal null}.
+	 * @see org.springframework.context.ConfigurableApplicationContext
+	 */
+	public static @NonNull <T extends ConfigurableApplicationContext> T registerWith(@NonNull T applicationContext) {
+
+		Assert.notNull(applicationContext, "ApplicationContext is required");
+
+		registrations.computeIfAbsent(applicationContext, it -> {
+			it.addBeanFactoryPostProcessor(INSTANCE);
+			return INSTANCE;
+		});
+
+		return applicationContext;
+	}
 
 	/**
 	 * Post processes the {@link ConfigurableListableBeanFactory} by searching for managed beans that claim (declare)

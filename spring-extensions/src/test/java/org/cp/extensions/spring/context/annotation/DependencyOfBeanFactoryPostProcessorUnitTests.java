@@ -15,6 +15,7 @@
  */
 package org.cp.extensions.spring.context.annotation;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
@@ -27,6 +28,7 @@ import org.junit.Test;
 
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -39,6 +41,41 @@ import org.springframework.stereotype.Component;
  * @since 1.0.0
  */
 public class DependencyOfBeanFactoryPostProcessorUnitTests {
+
+	@Test
+	public void registerWithSingleApplicationContext() {
+
+		ConfigurableApplicationContext mockApplicationContext = mock(ConfigurableApplicationContext.class);
+
+		assertThat(DependencyOfBeanFactoryPostProcessor.registerWith(mockApplicationContext))
+			.isSameAs(mockApplicationContext);
+		assertThat(DependencyOfBeanFactoryPostProcessor.registerWith(mockApplicationContext))
+			.isSameAs(mockApplicationContext);
+
+		verify(mockApplicationContext, times(1))
+			.addBeanFactoryPostProcessor(eq(DependencyOfBeanFactoryPostProcessor.INSTANCE));
+		verifyNoMoreInteractions(mockApplicationContext);
+	}
+
+	@Test
+	public void registerWithMultipleApplicationContexts() {
+
+		ConfigurableApplicationContext mockApplicationContextOne = mock(ConfigurableApplicationContext.class);
+		ConfigurableApplicationContext mockApplicationContextTwo = mock(ConfigurableApplicationContext.class);
+
+		assertThat(DependencyOfBeanFactoryPostProcessor.registerWith(mockApplicationContextOne))
+			.isSameAs(mockApplicationContextOne);
+		assertThat(DependencyOfBeanFactoryPostProcessor.registerWith(mockApplicationContextTwo))
+			.isSameAs(mockApplicationContextTwo);
+		assertThat(DependencyOfBeanFactoryPostProcessor.registerWith(mockApplicationContextOne))
+			.isSameAs(mockApplicationContextOne);
+
+		verify(mockApplicationContextOne, times(1))
+			.addBeanFactoryPostProcessor(eq(DependencyOfBeanFactoryPostProcessor.INSTANCE));
+		verify(mockApplicationContextTwo, times(1))
+			.addBeanFactoryPostProcessor(eq(DependencyOfBeanFactoryPostProcessor.INSTANCE));
+		verifyNoMoreInteractions(mockApplicationContextOne, mockApplicationContextTwo);
+	}
 
 	@Test
 	@SuppressWarnings("all")
