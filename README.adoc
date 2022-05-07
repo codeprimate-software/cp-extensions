@@ -16,15 +16,15 @@ the integrated Java libraries and frameworks.
 In some cases, the extended functionality may have been offered and submitted as a PR to the original project, but for
 circumstances out of our control, the PR was not accepted, so the extensions will live here.
 
-== Requirements
-
-* Baseline is Java SE (JDK/JRE) 8.0.
-* Built with Oracle JDK 1.8.0_331.
-* Elements 1.0.0-M7.
-
 == License
 
-_Extensions_ is licensed under the Apache 2.0 Software License Agreement.
+_Extensions_ is licensed under the Apache 2.0 Software License Agreement
+(see https://github.com/codeprimate-software/cp-extensions/blob/master/LICENSE.txt[LICENSE]).
+
+== Requirements
+
+* Baseline is Java SE (JDK/JRE) 8.0. Built with Oracle JDK `1.8.0_331`.
+* Codeprimate Elements `1.0.0-M7`.
 
 == Download
 
@@ -34,7 +34,7 @@ _Extensions_ is licensed under the Apache 2.0 Software License Agreement.
     <dependencies>
         <dependency>
             <groupId>org.codeprimate</groupId>
-            <artifactId>cp-extensions</artifactId>
+            <artifactId>cp-extensions-bom</artifactId>
             <version>0.1.0</version>
             <scope>import</scope>
             <type>pom</type>
@@ -49,7 +49,7 @@ apply plugin: 'io.spring.dependency-management'
 
 dependencyManagement {
     imports {
-        mavenBom 'org.codeprimate:cp-extensions:0.1.0'
+        mavenBom 'org.codeprimate:cp-extensions-bom:0.1.0'
     }
 }
 ----
