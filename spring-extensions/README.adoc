@@ -1,0 +1,49 @@
+= Spring Extensions
+
+_Spring Extensions_ is a software project and Java library focused on providing extensions for and integrations with
+Spring.
+
+The extensions for Spring begin with the core https://github.com/spring-projects/spring-framework[Spring Framework]
+and include all https://github.com/spring-projects[Spring Projects] (also see https://spring.io/projects[Projects]
+on https://spring.io[spring.io]).
+
+== License
+
+_Extensions_ is licensed under the Apache 2.0 Software License Agreement
+(see https://github.com/codeprimate-software/cp-extensions/blob/master/LICENSE.txt[LICENSE]).
+
+== Requirements
+
+* Baseline is Java SE (JDK/JRE) 8.0. Built with Oracle JDK `1.8.0_331`.
+* Codeprimate Elements `1.0.0-M7`.
+* Spring Framework `5.3.19`.
+
+== Download
+
+.Maven
+----
+<dependency>
+    <groupId>org.codeprimate</groupId>
+    <artifactId>spring-extensions</artifactId>
+    <version>0.1.0</version>
+</dependency>
+----
+
+.Gradle
+----
+implementation 'org.codeprimate:spring-extensions:0.1.0'
+----
+
+== Issues
+
+Please use https://github.com/codeprimate-software/cp-extensions/issues[GitHub Issues] to report any bugs, improvements
+or feature requests.
+
+== Contributions
+
+Thank you for your interests in contributing to the *Codeprimate Extensions*, *Spring Extensions* subproject.
+
+Please submit Issues using https://github.com/codeprimate-software/cp-elements/issues[GitHub Issues]
+or Pull Requests (PR) using https://github.com/codeprimate-software/cp-elements/pulls[GitHub Pull Requests].
+
+**Thank you!**
