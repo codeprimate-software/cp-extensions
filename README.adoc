@@ -1,0 +1,69 @@
+= Codeprimate Extensions
+
+_Codeprimate Extensions_ is a software project and Java library of modules each providing integrations with, as well as
+extensions for, 3rd-party Java libraries and frameworks.
+
+Unlike https://github.com/codeprimate-software/cp-elements[_Elements_], which by design is intentionally and solely
+based on _Java_ alone, having no external dependencies, *_Extensions_* builds on, or extends *_Elements_* along with
+3rd-party Java libraries using integration and extension, and will therefore naturally have dependencies. It is a very
+common way to organize and layer (architect) software, only including additional dependencies when absolutely necessary.
+So, it is a goal of this project that the sum of the whole be greater than the individual components by themselves.
+
+In addition to integrating Codeprimate software with 3rd-party Java libraries, _Extensions_ also provides enhancements
+and additional capabilities to the underlying Java libraries and frameworks not offered in or provided by the core of
+the integrated Java libraries and frameworks.
+
+In some cases, the extended functionality may have been offered and submitted as a PR to the original project, but for
+circumstances out of our control, the PR was not accepted, so the extensions will live here.
+
+== Requirements
+
+* Baseline is Java SE (JDK/JRE) 8.0.
+* Built with Oracle JDK 1.8.0_331.
+* Elements 1.0.0-M7.
+
+== License
+
+_Extensions_ is licensed under the Apache 2.0 Software License Agreement.
+
+== Download
+
+.Maven
+----
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.codeprimate</groupId>
+            <artifactId>cp-extensions</artifactId>
+            <version>0.1.0</version>
+            <scope>import</scope>
+            <type>pom</type>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+----
+
+.Gradle
+----
+apply plugin: 'io.spring.dependency-management'
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.codeprimate:cp-extensions:0.1.0'
+    }
+}
+----
+
+== Issues
+
+Please use https://github.com/codeprimate-software/cp-extensions/issues[GitHub Issues] to report any bugs, improvements
+or feature requests.
+
+== Contributions
+
+Thank you for your interests in contributing to the *Codeprimate Extensions* project.
+
+Please submit Issues using https://github.com/codeprimate-software/cp-elements/issues[GitHub Issues]
+or Pull Requests (PR) using https://github.com/codeprimate-software/cp-elements/pulls[GitHub Pull Requests].
+
+**Thank you!**
