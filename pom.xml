@@ -11,16 +11,17 @@
 		<version>1.8.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>cp-extensions</artifactId>
+	<artifactId>cp-extensions-bom</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<name>Extensions</name>
 	<description>
-		This is the parent project to all Codeprimate Extensions, which provides extensions to various 3rd-party
-		Java libraries and frameworks commonly used to build applications in Java. Additionally, Extensions provides
-		integrations between other Codeprimate projects, such as Elements, alongside 3rd-party Java libraries
-		and frameworks. These integrations will most likely occur as Adapters to the underlying library or framework.
+		This is the parent project for all Codeprimate Extensions, which provides extensions to and integrations with
+		3rd-party Java libraries and frameworks commonly used to build applications in Java. Additionally, Extensions
+		provides integrations between Codeprimate software, such as Elements, and 3rd-party Java libraries. These
+		integrations will likely be implemented as Adapters to the underlying Java library or framework in order to
+		conform to Elements' abstractions and interfaces where applicable.
 	</description>
 
 	<modules>
