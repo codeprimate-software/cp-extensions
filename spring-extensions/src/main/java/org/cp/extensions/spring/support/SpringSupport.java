@@ -26,12 +26,12 @@ import org.cp.elements.lang.ObjectUtils;
 import org.cp.elements.lang.annotation.NullSafe;
 import org.cp.elements.util.ArrayUtils;
 import org.cp.elements.util.CollectionUtils;
-
 import org.springframework.beans.PropertyValue;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.annotation.OrderUtils;
@@ -80,11 +80,15 @@ public abstract class SpringSupport {
 	 * @see org.springframework.beans.factory.InitializingBean
 	 * @see java.util.function.Consumer
 	 */
+	@NullSafe
 	public static @NonNull Consumer<Object> beanInitializer() {
 
 		return bean -> {
 			if (bean instanceof InitializingBean) {
-				ObjectUtils.doOperationSafely(it -> { ((InitializingBean) bean).afterPropertiesSet(); return null; });
+				ObjectUtils.doOperationSafely(it -> {
+					((InitializingBean) bean).afterPropertiesSet();
+					return null;
+				});
 			}
 		};
 	}
@@ -190,5 +194,31 @@ public abstract class SpringSupport {
 		beanDefinition.getPropertyValues().addPropertyValue(propertyName, propertyValue);
 
 		return beanDefinition;
+	}
+
+	/**
+	 * Utility method used to re-register a bean with the given, required {@link String name} using the new, required
+	 * {@link BeanDefinition}.
+	 *
+	 * @param beanRegistry {@link BeanDefinitionRegistry} holding the bean registrations; must not be {@literal null}.
+	 * @param beanName {@link String} containing the {@literal name} of the bean to register.
+	 * @param beanDefinition {@link BeanDefinition} defining the bean to register.
+	 * @return the given {@link BeanDefinitionRegistry}.
+	 * @throws IllegalArgumentException if the {@link BeanDefinitionRegistry} or {@link BeanDefinition}
+	 * is {@literal null}, or the {@link String bean name} is not specified.
+	 * @see org.springframework.beans.factory.support.BeanDefinitionRegistry
+	 * @see org.springframework.beans.factory.config.BeanDefinition
+	 */
+	public static @NonNull BeanDefinitionRegistry reregister(@NonNull BeanDefinitionRegistry beanRegistry,
+			@NonNull String beanName, @NonNull BeanDefinition beanDefinition) {
+
+		Assert.notNull(beanRegistry, "BeanDefinitionRegistry is required");
+		Assert.hasText(beanName, "Bean name [%s] is required");
+		Assert.notNull(beanDefinition, "BeanDefinition to register is required");
+
+		beanRegistry.removeBeanDefinition(beanName);
+		beanRegistry.registerBeanDefinition(beanName, beanDefinition);
+
+		return beanRegistry;
 	}
 }

@@ -16,6 +16,7 @@
 package org.cp.extensions.spring.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -28,15 +29,14 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.util.function.Consumer;
 
-import org.junit.Test;
-
 import org.assertj.core.api.InstanceOfAssertFactories;
-
+import org.junit.Test;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyValue;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
@@ -259,6 +259,65 @@ public class SpringSupportUnitTests {
 
 		verify(mockBeanDefinition, times(1)).getPropertyValues();
 		verifyNoMoreInteractions(mockBeanDefinition);
+	}
+
+	@Test
+	public void reregisterBeanSuccessfully() {
+
+		BeanDefinition mockBeanDefinition = mock(BeanDefinition.class);
+		BeanDefinitionRegistry mockBeanDefinitionRegistry = mock(BeanDefinitionRegistry.class);
+
+		assertThat(SpringSupport.reregister(mockBeanDefinitionRegistry, "TestBean", mockBeanDefinition))
+			.isSameAs(mockBeanDefinitionRegistry);
+
+		verify(mockBeanDefinitionRegistry, times(1)).removeBeanDefinition(eq("TestBean"));
+		verify(mockBeanDefinitionRegistry, times(1))
+			.registerBeanDefinition(eq("TestBean"), eq(mockBeanDefinition));
+		verifyNoMoreInteractions(mockBeanDefinitionRegistry);
+		verifyNoInteractions(mockBeanDefinition);
+	}
+
+	@Test
+	@SuppressWarnings("all")
+	public void reregisterBeanWithNullBeanDefinition() {
+
+		assertThatExceptionOfType(IllegalArgumentException.class)
+			.isThrownBy(() -> SpringSupport.reregister(mock(BeanDefinitionRegistry.class), "TestBean", null))
+			.withMessage("BeanDefinition to register is required")
+			.withNoCause();
+	}
+
+	@Test
+	@SuppressWarnings("all")
+	public void reregisterBeanWithNullBeanDefinitionRegistry() {
+
+		assertThatExceptionOfType(IllegalArgumentException.class)
+			.isThrownBy(() -> SpringSupport.reregister(null, "TestBean", mock(BeanDefinition.class)))
+			.withMessage("BeanDefinitionRegistry is required")
+			.withNoCause();
+	}
+
+	private void testRegisterBeanWithInvalidBeanName(String beanName) {
+
+		assertThatExceptionOfType(IllegalArgumentException.class)
+			.isThrownBy(() -> SpringSupport.reregister(mock(BeanDefinitionRegistry.class), beanName, mock(BeanDefinition.class)))
+			.withMessage("Bean name [%s] is required")
+			.withNoCause();
+	}
+
+	@Test
+	public void reregisterBeanWithBlankBeanName() {
+		testRegisterBeanWithInvalidBeanName("  ");
+	}
+
+	@Test
+	public void reregisterBeanWithEmptyBeanName() {
+		testRegisterBeanWithInvalidBeanName("");
+	}
+
+	@Test
+	public void reregisterBeanWithNullBeanName() {
+		testRegisterBeanWithInvalidBeanName(null);
 	}
 
 	@Order(4)
