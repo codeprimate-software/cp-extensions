@@ -18,9 +18,9 @@
 	<name>Extensions</name>
 	<description>
 		This is the parent project for all Codeprimate Extensions, which provides extensions to and integrations with
-		3rd-party Java libraries and frameworks commonly used to build applications in Java. Additionally, Extensions
-		provides integrations between Codeprimate software, such as Elements, and 3rd-party Java libraries. These
-		integrations will likely be implemented as Adapters to the underlying Java library or framework in order to
+		3rd-party Java libraries and frameworks commonly used to build software applications in Java. Additionally,
+		Extensions provides integrations between Codeprimate software, such as Elements, and 3rd-party Java libraries.
+		These integrations will likely be implemented as Adapters to the underlying Java library or framework in order to
 		conform to Elements' abstractions and interfaces where applicable.
 	</description>
 	<inceptionYear>2022</inceptionYear>
@@ -53,7 +53,7 @@
 	</modules>
 
 	<properties>
-		<java-module-name>org.codeprimate.extensions</java-module-name>
+		<java-module-name>codeprimate.extensions</java-module-name>
 		<cp-elements.version>1.0.0-M7</cp-elements.version>
 	</properties>
 
