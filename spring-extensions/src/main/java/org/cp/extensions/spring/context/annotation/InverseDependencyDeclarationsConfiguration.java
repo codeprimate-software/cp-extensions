@@ -19,6 +19,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
 
 /**
  * Spring {@link Configuration} class used to declare the {@link DependencyOfApplicationContextInitializer}
@@ -38,7 +39,7 @@ import org.springframework.context.annotation.Configuration;
 public class InverseDependencyDeclarationsConfiguration {
 
 	@Bean
-	ApplicationContextInitializer<ConfigurableApplicationContext> dependencyOfApplicationContextInitializer() {
+	@NonNull ApplicationContextInitializer<ConfigurableApplicationContext> dependencyOfApplicationContextInitializer() {
 		return new DependencyOfApplicationContextInitializer();
 	}
 }
