@@ -16,6 +16,7 @@
 package org.cp.extensions.spring.context.annotation;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
@@ -24,8 +25,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -35,9 +35,11 @@ import org.springframework.stereotype.Component;
  * Unit Tests for {@link DependencyOfBeanFactoryPostProcessor}.
  *
  * @author John Blum
- * @see org.junit.Test
+ * @see org.junit.jupiter.api.Test
  * @see org.mockito.Mockito
  * @see org.cp.extensions.spring.context.annotation.DependencyOfBeanFactoryPostProcessor
+ * @see org.springframework.beans.factory.config.ConfigurableListableBeanFactory
+ * @see org.springframework.context.ConfigurableApplicationContext
  * @since 1.0.0
  */
 public class DependencyOfBeanFactoryPostProcessorUnitTests {
@@ -49,11 +51,13 @@ public class DependencyOfBeanFactoryPostProcessorUnitTests {
 
 		assertThat(DependencyOfBeanFactoryPostProcessor.registerWith(mockApplicationContext))
 			.isSameAs(mockApplicationContext);
+
 		assertThat(DependencyOfBeanFactoryPostProcessor.registerWith(mockApplicationContext))
 			.isSameAs(mockApplicationContext);
 
 		verify(mockApplicationContext, times(1))
 			.addBeanFactoryPostProcessor(eq(DependencyOfBeanFactoryPostProcessor.INSTANCE));
+
 		verifyNoMoreInteractions(mockApplicationContext);
 	}
 
@@ -65,15 +69,19 @@ public class DependencyOfBeanFactoryPostProcessorUnitTests {
 
 		assertThat(DependencyOfBeanFactoryPostProcessor.registerWith(mockApplicationContextOne))
 			.isSameAs(mockApplicationContextOne);
+
 		assertThat(DependencyOfBeanFactoryPostProcessor.registerWith(mockApplicationContextTwo))
 			.isSameAs(mockApplicationContextTwo);
+
 		assertThat(DependencyOfBeanFactoryPostProcessor.registerWith(mockApplicationContextOne))
 			.isSameAs(mockApplicationContextOne);
 
 		verify(mockApplicationContextOne, times(1))
 			.addBeanFactoryPostProcessor(eq(DependencyOfBeanFactoryPostProcessor.INSTANCE));
+
 		verify(mockApplicationContextTwo, times(1))
 			.addBeanFactoryPostProcessor(eq(DependencyOfBeanFactoryPostProcessor.INSTANCE));
+
 		verifyNoMoreInteractions(mockApplicationContextOne, mockApplicationContextTwo);
 	}
 
@@ -105,6 +113,16 @@ public class DependencyOfBeanFactoryPostProcessorUnitTests {
 		verify(beanTwo, times(1)).getDependsOn();
 		verify(beanTwo, times(1)).setDependsOn(new String[] { "TestBean" });
 		verifyNoMoreInteractions(mockBeanFactory, beanOne, beanTwo);
+	}
+
+	@Test
+	@SuppressWarnings("all")
+	public void postProcessNullBeanFactoryThrowsIllegalArgumentException() {
+
+		assertThatIllegalArgumentException()
+			.isThrownBy(() -> DependencyOfBeanFactoryPostProcessor.INSTANCE.postProcessBeanFactory(null))
+			.withMessage("BeanFactory is required")
+			.withNoCause();
 	}
 
 	@Component("TestBean")

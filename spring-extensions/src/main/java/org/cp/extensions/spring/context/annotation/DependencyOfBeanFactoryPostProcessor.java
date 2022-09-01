@@ -104,6 +104,8 @@ public class DependencyOfBeanFactoryPostProcessor implements BeanFactoryPostProc
 	@Override
 	public void postProcessBeanFactory(@NonNull ConfigurableListableBeanFactory beanFactory) throws BeansException {
 
+		Assert.notNull(beanFactory, "BeanFactory is required");
+
 		String[] dependencyOfAnnotatedBeanNames =
 			ArrayUtils.nullSafeArray(beanFactory.getBeanNamesForAnnotation(DEPENDENCY_OF_TYPE), String.class);
 
