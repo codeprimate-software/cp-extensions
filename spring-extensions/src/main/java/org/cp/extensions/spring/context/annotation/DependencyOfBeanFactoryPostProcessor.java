@@ -43,10 +43,13 @@ import org.springframework.lang.Nullable;
  * @author John Blum
  * @see java.lang.annotation.Annotation
  * @see org.cp.extensions.spring.context.annotation.DependencyOf
+ * @see org.cp.extensions.spring.context.annotation.DependencyOfApplicationContextInitializer
  * @see org.springframework.beans.factory.config.BeanDefinition
  * @see org.springframework.beans.factory.config.BeanFactoryPostProcessor
  * @see org.springframework.beans.factory.config.ConfigurableListableBeanFactory
+ * @see org.springframework.context.ConfigurableApplicationContext
  * @see org.springframework.context.annotation.DependsOn
+ * @see org.springframework.core.annotation.AnnotationAttributes
  * @since 0.1.0
  */
 @SuppressWarnings("unused")
@@ -62,7 +65,7 @@ public class DependencyOfBeanFactoryPostProcessor implements BeanFactoryPostProc
 		new ConcurrentHashMap<>();
 
 	/**
-	 * Null-safe factory method used to register an instance of the {@link DependencyOfBeanFactoryPostProcessor} with
+	 * Factory method used to register an instance of the {@link DependencyOfBeanFactoryPostProcessor} with
 	 * the given, required {@link ConfigurableApplicationContext}.
 	 *
 	 * The {@code registerWith(..)} factory method ensures only a single registration of

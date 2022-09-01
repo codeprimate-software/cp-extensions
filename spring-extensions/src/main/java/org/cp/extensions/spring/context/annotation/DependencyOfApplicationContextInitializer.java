@@ -25,8 +25,9 @@ import org.springframework.lang.Nullable;
  * Spring {@link ApplicationContextInitializer} used to enable {@link DependencyOf} annotation declarations.
  *
  * @author John Blum
- * @see org.cp.extensions.spring.context.annotation.DependencyOfApplicationContextInitializer
+ * @see org.cp.extensions.spring.context.annotation.DependencyOfBeanFactoryPostProcessor
  * @see org.springframework.context.ApplicationContextInitializer
+ * @see org.springframework.context.ConfigurableApplicationContext
  * @since 0.1.0
  */
 @SuppressWarnings("unused")
