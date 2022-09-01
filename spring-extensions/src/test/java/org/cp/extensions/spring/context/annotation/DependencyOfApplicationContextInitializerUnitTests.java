@@ -21,19 +21,18 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * Unit Tests for {@link DependencyOfApplicationContextInitializer}.
  *
  * @author John Blum
- * @see org.junit.Test
+ * @see org.junit.jupiter.api.Test
  * @see org.mockito.Mockito
  * @see org.cp.extensions.spring.context.annotation.DependencyOfApplicationContextInitializer
  * @see org.springframework.context.ConfigurableApplicationContext
- * @since 1.0.0
+ * @since 0.1.0
  */
 public class DependencyOfApplicationContextInitializerUnitTests {
 
@@ -48,6 +47,7 @@ public class DependencyOfApplicationContextInitializerUnitTests {
 
 		verify(mockApplicationContext, times(1))
 			.addBeanFactoryPostProcessor(isA(DependencyOfBeanFactoryPostProcessor.class));
+
 		verifyNoMoreInteractions(mockApplicationContext);
 	}
 
