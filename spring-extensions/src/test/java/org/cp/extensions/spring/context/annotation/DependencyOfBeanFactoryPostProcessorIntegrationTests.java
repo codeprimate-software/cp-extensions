@@ -17,19 +17,20 @@ package org.cp.extensions.spring.context.annotation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.lang.NonNull;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 /**
  * Integration Tests for {@link DependencyOfBeanFactoryPostProcessor}.
@@ -37,23 +38,28 @@ import org.springframework.test.context.junit4.SpringRunner;
  * @author John Blum
  * @see org.junit.Test
  * @see org.cp.extensions.spring.context.annotation.DependencyOfBeanFactoryPostProcessor
+ * @see org.springframework.beans.factory.config.BeanPostProcessor
  * @see org.springframework.context.annotation.Bean
  * @see org.springframework.context.annotation.Configuration
- * @see org.springframework.test.context.ContextConfiguration
- * @see org.springframework.test.context.junit4.SpringRunner
- * @since 1.0.0
+ * @see org.springframework.test.context.junit.jupiter.SpringJUnitConfig
+ * @since 0.1.0
  */
-@RunWith(SpringRunner.class)
-@ContextConfiguration
+@SpringJUnitConfig
 @SuppressWarnings("unused")
 public class DependencyOfBeanFactoryPostProcessorIntegrationTests {
 
-	private static final List<String> beanNames = new CopyOnWriteArrayList<>();
+	@Autowired
+	private Iterable<String> beanNames;
 
 	@Test
 	public void beansInitializedInDependencyOrder() {
-		assertThat(beanNames).containsExactly("C", "B", "A");
+
+		assertThat(this.beanNames)
+			.describedAs("Expected [C, B, A]; but was %s", this.beanNames)
+			.containsExactly("C", "B", "A");
 	}
+
+	interface IterableBeanNamesPostProcessor extends BeanPostProcessor, Iterable<String> { }
 
 	@Configuration
 	static class TestConfiguration {
@@ -64,18 +70,30 @@ public class DependencyOfBeanFactoryPostProcessorIntegrationTests {
 		}
 
 		@Bean
-		BeanPostProcessor beanNamesPostProcess() {
+		BeanPostProcessor beanNamesPostProcessor() {
 
-			return new BeanPostProcessor() {
+			return new IterableBeanNamesPostProcessor() {
+
+				private final List<String> beanNames = new ArrayList<>(3);
 
 				@Override
 				public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 
 					if (Arrays.asList("A", "B", "C").contains(beanName)) {
-						beanNames.add(beanName);
+						this.beanNames.add(beanName);
 					}
 
 					return bean;
+				}
+
+				@Override
+				public @NonNull Iterator<String> iterator() {
+					return Collections.unmodifiableList(this.beanNames).iterator();
+				}
+
+				@Override
+				public String toString() {
+					return this.beanNames.toString();
 				}
 			};
 		}
