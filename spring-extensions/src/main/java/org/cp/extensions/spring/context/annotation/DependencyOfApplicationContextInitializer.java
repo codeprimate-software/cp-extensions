@@ -31,7 +31,8 @@ import org.springframework.lang.Nullable;
  * @since 0.1.0
  */
 @SuppressWarnings("unused")
-public class DependencyOfApplicationContextInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+public class DependencyOfApplicationContextInitializer
+		implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
 	/**
 	 * Initializes the given {@link ConfigurableApplicationContext} by adding

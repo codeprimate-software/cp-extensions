@@ -15,13 +15,14 @@
  */
 package org.cp.extensions.spring.context.annotation;
 
-import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.junit.jupiter.api.Test;
+
 import org.springframework.context.ConfigurableApplicationContext;
 
 /**
@@ -46,14 +47,14 @@ public class DependencyOfApplicationContextInitializerUnitTests {
 		initializer.initialize(mockApplicationContext);
 
 		verify(mockApplicationContext, times(1))
-			.addBeanFactoryPostProcessor(isA(DependencyOfBeanFactoryPostProcessor.class));
+			.addBeanFactoryPostProcessor(eq(DependencyOfBeanFactoryPostProcessor.INSTANCE));
 
 		verifyNoMoreInteractions(mockApplicationContext);
 	}
 
 	@Test
 	@SuppressWarnings("all")
-	public void initializeNullIsNullSafe() {
+	public void initializeNullApplicationContextIsNullSafe() {
 		new DependencyOfApplicationContextInitializer().initialize(null);
 	}
 }
