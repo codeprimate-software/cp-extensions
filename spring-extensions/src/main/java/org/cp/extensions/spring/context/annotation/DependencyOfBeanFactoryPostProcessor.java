@@ -38,7 +38,7 @@ import org.springframework.lang.Nullable;
 
 /**
  * Spring {@link BeanFactoryPostProcessor} implementation used to post process {@link BeanDefinition BeanDefinitions}
- * declared in the Spring container, annotated with the {@link DependencyOf} annotation.
+ * declared in the Spring container annotated with the {@link DependencyOf} annotation.
  *
  * @author John Blum
  * @see java.lang.annotation.Annotation
@@ -75,7 +75,7 @@ public class DependencyOfBeanFactoryPostProcessor implements BeanFactoryPostProc
 	 * @param applicationContext {@link ConfigurableApplicationContext} on which to register an instance of
 	 * the {@link DependencyOfBeanFactoryPostProcessor}; must not be {@literal null}.
 	 * @return the given {@link ConfigurableApplicationContext}.
-	 * @throws IllegalArgumentException if {@link ConfigurableApplicationContext} is {@literal null}.
+	 * @throws IllegalArgumentException if the {@link ConfigurableApplicationContext} is {@literal null}.
 	 * @see org.springframework.context.ConfigurableApplicationContext
 	 */
 	public static @NonNull <T extends ConfigurableApplicationContext> T registerWith(@NonNull T applicationContext) {
@@ -91,14 +91,15 @@ public class DependencyOfBeanFactoryPostProcessor implements BeanFactoryPostProc
 	}
 
 	/**
-	 * Post processes the {@link ConfigurableListableBeanFactory} by searching for managed beans that claim (declare)
-	 * to be a {@link DependencyOf dependency of} other beans declared and managed inside the Spring container.
+	 * Post processes the {@link ConfigurableListableBeanFactory} by searching for managed beans that declare (claim)
+	 * to be a {@link DependencyOf dependency of} other beans managed inside the Spring container.
 	 *
 	 * Out-of-the-box, the Spring container does not support this configuration arrangement, and therefore, requires
-	 * additional processing to set up this inverse {@link DependsOn depends on} relationship.
+	 * additional processing to set up this inverse {@link DependsOn} relationship.
 	 *
 	 * @param beanFactory {@link ConfigurableListableBeanFactory} to post process.
 	 * @throws BeansException if an exception occurs while processing the {@link ConfigurableListableBeanFactory}.
+	 * @throws IllegalArgumentException if the {@link ConfigurableListableBeanFactory} is {@literal null}.
 	 * @see org.springframework.beans.factory.config.ConfigurableListableBeanFactory
 	 */
 	@Override
@@ -128,16 +129,33 @@ public class DependencyOfBeanFactoryPostProcessor implements BeanFactoryPostProc
 		}
 	}
 
-	@SuppressWarnings("all")
-	private @Nullable AnnotationAttributes getAnnotationAttributes(@NonNull Annotation annotation) {
+	/**
+	 * Resolves the {@link AnnotationAttributes} for the given {@link Annotation}.
+	 *
+	 * @param annotation {@link Annotation} from which to return {@link AnnotationAttributes}.
+	 * @return {@link AnnotationAttributes} for the given {@link Annotation}; may be {@literal null}.
+	 * @see org.springframework.core.annotation.AnnotationAttributes
+	 * @see java.lang.annotation.Annotation
+	 */
+	private @Nullable AnnotationAttributes getAnnotationAttributes(@Nullable Annotation annotation) {
 
 		return annotation != null
 			? AnnotationAttributes.fromMap(AnnotationUtils.getAnnotationAttributes(annotation))
 			: null;
 	}
 
-	@SuppressWarnings("all")
-	private @Nullable String[] getValueAttribute(@NonNull AnnotationAttributes annotationAttributes) {
+	/**
+	 * Gets the {@literal value} attribute as a {@link String} array from the given {@link AnnotationAttributes}.
+	 *
+	 * The {@link AnnotationAttributes} correspond to a {@link DependencyOf} annotation declared on a bean definition
+	 * declared/defined and managed in the Spring container.
+	 *
+	 * @param annotationAttributes {@link AnnotationAttributes} for a {@link DependencyOf} annotation declaration
+	 * on a bean.
+	 * @return a {@link String} array containing bean names; may be {@literal null}.
+	 * @see org.springframework.core.annotation.AnnotationAttributes
+	 */
+	private @Nullable String[] getValueAttribute(@Nullable AnnotationAttributes annotationAttributes) {
 
 		return annotationAttributes != null
 			? annotationAttributes.getStringArray(VALUE_ATTRIBUTE_NAME)
