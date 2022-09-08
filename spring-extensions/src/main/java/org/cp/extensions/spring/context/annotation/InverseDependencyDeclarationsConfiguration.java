@@ -15,21 +15,17 @@
  */
 package org.cp.extensions.spring.context.annotation;
 
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
 
 /**
- * Spring {@link Configuration} class used to declare the {@link DependencyOfApplicationContextInitializer}
- * in order to enable inverse dependency relationships betweewn bean managed by the Spring container
- * using the {@link DependencyOf} annotation.
+ * Spring {@link Configuration} class used to register (add) the {@link DependencyOfBeanFactoryPostProcessor}
+ * with the Spring container, and declare (enable) inverse dependency relationships between beans managed by
+ * the Spring container using the {@link DependencyOf} annotation.
  *
  * @author John Blum
- * @see org.cp.extensions.spring.context.annotation.DependencyOfApplicationContextInitializer
- * @see org.springframework.context.ApplicationContextInitializer
- * @see org.springframework.context.ConfigurableApplicationContext
+ * @see org.cp.extensions.spring.context.annotation.DependencyOfBeanFactoryPostProcessor
  * @see org.springframework.context.annotation.Bean
  * @see org.springframework.context.annotation.Configuration
  * @since 0.1.0
@@ -39,7 +35,7 @@ import org.springframework.lang.NonNull;
 public class InverseDependencyDeclarationsConfiguration {
 
 	@Bean
-	@NonNull ApplicationContextInitializer<ConfigurableApplicationContext> dependencyOfApplicationContextInitializer() {
-		return new DependencyOfApplicationContextInitializer();
+	static @NonNull DependencyOfBeanFactoryPostProcessor dependencyOfBeanFactoryPostProcessor() {
+		return DependencyOfBeanFactoryPostProcessor.INSTANCE;
 	}
 }
