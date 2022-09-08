@@ -26,14 +26,17 @@ import java.lang.annotation.Target;
 import org.springframework.context.annotation.Import;
 
 /**
- * Spring {@link Annotation} enabling the declaration of inverse dependency relationships between bean managed by
- * the Spring container using the {@link DependencyOf} annotation.
+ * Spring {@link Annotation} enabling the declaration of inverse dependency relationships between beans
+ * defined, declared and managed in the Spring container using the {@link DependencyOf} annotation.
  *
  * @author John Blum
  * @see java.lang.annotation.Documented
  * @see java.lang.annotation.Inherited
  * @see java.lang.annotation.Retention
  * @see java.lang.annotation.Target
+ * @see java.lang.annotation.ElementType#ANNOTATION_TYPE
+ * @see java.lang.annotation.ElementType#TYPE
+ * @see java.lang.annotation.RetentionPolicy#RUNTIME
  * @see org.cp.extensions.spring.context.annotation.InverseDependencyDeclarationsConfiguration
  * @see org.springframework.context.annotation.Import
  * @since 0.1.0
@@ -41,7 +44,7 @@ import org.springframework.context.annotation.Import;
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE, ElementType.ANNOTATION_TYPE })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.TYPE })
 @Import(InverseDependencyDeclarationsConfiguration.class)
 @SuppressWarnings("unused")
 public @interface EnableInverseDependencyDeclarations {
