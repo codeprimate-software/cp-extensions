@@ -29,7 +29,7 @@ import org.springframework.core.annotation.AliasFor;
 
 /**
  * The {@link DependencyOf} annotation is the inverse of Spring's {@link DependsOn} annotation and allows a bean
- * to declare itself as a dependency of another bean declared and managed inside the Spring container.
+ * to declare itself as a dependency of another bean managed inside the Spring container.
  * <p>
  * For example, using Spring's {@link DependsOn} annotation, {@literal bean A} can declare that
  * it {@literal depends on} {@literal bean B}. Therefore, {@literal bean B} will be created before
@@ -81,10 +81,12 @@ import org.springframework.core.annotation.AliasFor;
  * </code>
  * </pre>
  *
- * One advantage of this approach over {@link DependsOn} is that {@literal bean A} does not need to know all the beans
- * it is possibly dependent on, especially at runtime when additional collaborators or dependencies may be added
- * dynamically to the classpath. Therefore, additional dependencies of A can be added to the configuration automatically,
- * over time without having to go back and modify the bean definition for A. This is especially useful during testing.
+ * One advantage of this approach over Spring's {@link DependsOn} annotation is that {@literal bean A} does not need to
+ * know all the beans it is possibly dependent on, especially at runtime when additional collaborators or dependencies
+ * may be added dynamically to the classpath. This can be especially true when using Spring Boot's auto-configuration,
+ * and convention over configuration approach. Therefore, additional dependencies of {@literal bean A} can be added to
+ * the configuration metadata automatically, over time, without having to go back and modify the bean definition for
+ * {@literal bean A}. This can be especially useful during testing.
  *
  * This feature is experimental.
  *
@@ -102,15 +104,15 @@ import org.springframework.core.annotation.AliasFor;
  * @since 0.1.0
  */
 @Documented
-@Inherited
 @Experimental
+@Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.TYPE, ElementType.METHOD })
 @SuppressWarnings("unused")
 public @interface DependencyOf {
 
 	/**
-	 * An array containing a list of {@link String names of beans} declared and managed in the Spring container
+	 * An array containing a list of {@link String bean names} declared and managed in the Spring container
 	 * that are dependent on this annotated bean.
 	 *
 	 * @return an array of {@link String bean names}.
@@ -120,7 +122,7 @@ public @interface DependencyOf {
 	String[] beanNames() default {};
 
 	/**
-	 * An array containing a list of {@link String names of beans} declared and managed in the Spring container
+	 * An array containing a list of {@link String bean names} declared and managed in the Spring container
 	 * that are dependent on this annotated bean.
 	 *
 	 * @return an array of {@link String bean names}.
