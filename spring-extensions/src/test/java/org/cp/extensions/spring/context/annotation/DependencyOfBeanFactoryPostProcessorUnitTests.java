@@ -26,6 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -45,7 +46,7 @@ import org.springframework.stereotype.Component;
 public class DependencyOfBeanFactoryPostProcessorUnitTests {
 
 	@Test
-	public void registerWithSingleApplicationContext() {
+	public void registerWithApplicationContextOnlyOnce() {
 
 		ConfigurableApplicationContext mockApplicationContext = mock(ConfigurableApplicationContext.class);
 
@@ -102,7 +103,7 @@ public class DependencyOfBeanFactoryPostProcessorUnitTests {
 		doReturn(beanOne).when(mockBeanFactory).getBeanDefinition(eq("BeanOne"));
 		doReturn(beanTwo).when(mockBeanFactory).getBeanDefinition(eq("BeanTwo"));
 
-		new DependencyOfBeanFactoryPostProcessor().postProcessBeanFactory(mockBeanFactory);
+		DependencyOfBeanFactoryPostProcessor.INSTANCE.postProcessBeanFactory(mockBeanFactory);
 
 		verify(mockBeanFactory, times(1)).getBeanNamesForAnnotation(eq(DependencyOf.class));
 		verify(mockBeanFactory, times(1)).findAnnotationOnBean(eq("TestBean"), eq(DependencyOf.class));
