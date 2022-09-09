@@ -52,7 +52,7 @@ public class BeansInitializedInDependencyOrderIntegrationTests
     extends AbstractBeanInitializationOrderIntegrationTests {
 
   @Test
-  public void beansInitializedInInverseDependencyOrder() {
+  public void beansInitializedInDependencyOrder() {
 
     assertThat(getBeanNames())
       .describedAs("Expected [C, B, A]; but was %s", getBeanNames())
