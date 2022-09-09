@@ -17,85 +17,63 @@ package org.cp.extensions.spring.context.annotation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanPostProcessor;
+
+import org.cp.extensions.spring.test.context.DependencyOfContextCustomizer;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.lang.NonNull;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 /**
  * Integration Tests for {@link DependencyOfBeanFactoryPostProcessor}.
  *
  * @author John Blum
- * @see org.junit.Test
+ * @see org.junit.jupiter.api.Test
  * @see org.cp.extensions.spring.context.annotation.DependencyOfBeanFactoryPostProcessor
- * @see org.springframework.beans.factory.config.BeanPostProcessor
  * @see org.springframework.context.annotation.Bean
  * @see org.springframework.context.annotation.Configuration
+ * @see org.springframework.context.annotation.Import
+ * @see org.springframework.test.annotation.DirtiesContext
  * @see org.springframework.test.context.junit.jupiter.SpringJUnitConfig
  * @since 0.1.0
  */
+@DirtiesContext
 @SpringJUnitConfig
 @SuppressWarnings("unused")
-public class DependencyOfBeanFactoryPostProcessorIntegrationTests {
+public class DependencyOfBeanFactoryPostProcessorIntegrationTests
+		extends AbstractBeanInitializationOrderIntegrationTests {
 
-	@Autowired
-	private Iterable<String> beanNames;
+	@BeforeAll
+	public static void disableTestContextCustomization() {
+		System.setProperty(DependencyOfContextCustomizer.TEST_CONTEXT_CUSTOMIZATION_ENABLED_PROPERTY,
+			Boolean.FALSE.toString());
+	}
+
+	@AfterAll
+	public static void clearSystemProperties() {
+		System.clearProperty(DependencyOfContextCustomizer.TEST_CONTEXT_CUSTOMIZATION_ENABLED_PROPERTY);
+	}
 
 	@Test
-	public void beansInitializedInDependencyOrder() {
+	public void beansInitializedInInverseDependencyOrder() {
 
-		assertThat(this.beanNames)
-			.describedAs("Expected [C, B, A]; but was %s", this.beanNames)
+		assertThat(getBeanNames())
+			.describedAs("Expected [C, B, A]; but was %s", getBeanNames())
 			.containsExactly("C", "B", "A");
 	}
 
-	interface IterableBeanNamesPostProcessor extends BeanPostProcessor, Iterable<String> { }
-
 	@Configuration
+	@Import(BeansTestConfiguration.class)
 	static class TestConfiguration {
 
 		@Bean
 		static DependencyOfBeanFactoryPostProcessor dependencyOfBeanFactoryPostProcessor() {
 			return new DependencyOfBeanFactoryPostProcessor();
-		}
-
-		@Bean
-		BeanPostProcessor beanNamesPostProcessor() {
-
-			return new IterableBeanNamesPostProcessor() {
-
-				private final List<String> beanNames = new ArrayList<>(3);
-
-				@Override
-				public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-
-					if (Arrays.asList("A", "B", "C").contains(beanName)) {
-						this.beanNames.add(beanName);
-					}
-
-					return bean;
-				}
-
-				@Override
-				public @NonNull Iterator<String> iterator() {
-					return Collections.unmodifiableList(this.beanNames).iterator();
-				}
-
-				@Override
-				public String toString() {
-					return this.beanNames.toString();
-				}
-			};
 		}
 
 		@Bean("A")

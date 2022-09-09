@@ -36,6 +36,7 @@ import org.springframework.util.StringUtils;
  * Abstract base test class for Spring container bean initialization order Integration Tests.
  *
  * @author John Blum
+ * @see org.cp.extensions.spring.tests.AbstractSpringIntegrationTests
  * @see org.springframework.beans.factory.config.BeanPostProcessor
  * @see org.springframework.context.annotation.Bean
  * @see org.springframework.context.annotation.Configuration
