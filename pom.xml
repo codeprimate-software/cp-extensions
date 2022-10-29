@@ -49,6 +49,7 @@
 	</licenses>
 
 	<modules>
+		<module>junit-extensions</module>
 		<module>spring-extensions</module>
 	</modules>
 
