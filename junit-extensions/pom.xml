@@ -21,7 +21,7 @@
   </description>
 
   <properties>
-    <java-module-name>codeprimate-extensions-junit</java-module-name>
+    <java-module-name>codeprimate.extensions.junit</java-module-name>
   </properties>
 
   <dependencies>
