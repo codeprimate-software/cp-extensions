@@ -202,7 +202,7 @@ public class ExtensionExceptionHandlerUnitTests {
     assertThat(composedHandler).isNotNull();
 
     assertThatThrowableOfType(UnhandledExtensionException.class)
-      .isThrownBy(ThrowableOperation.from(args -> composedHandler.handle(mockExtensionContext, cause)))
+      .isThrownBy(ThrowableOperation.fromConsumer(args -> composedHandler.handle(mockExtensionContext, cause)))
       .causedBy(RuntimeException.class)
       .havingMessage("TEST")
       .withNoCause();
@@ -235,7 +235,7 @@ public class ExtensionExceptionHandlerUnitTests {
     assertThat(composedHandler).isNotNull();
 
     assertThatIllegalStateException()
-      .isThrownBy(ThrowableOperation.from(args -> composedHandler.handle(mockExtensionContext, cause)))
+      .isThrownBy(ThrowableOperation.fromConsumer(args -> composedHandler.handle(mockExtensionContext, cause)))
       .havingMessage("MOCK")
       .causedBy(RuntimeException.class)
       .havingMessage("TEST")

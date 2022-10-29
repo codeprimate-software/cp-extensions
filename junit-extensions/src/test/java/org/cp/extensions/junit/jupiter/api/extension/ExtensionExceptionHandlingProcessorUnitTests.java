@@ -39,12 +39,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.cp.elements.lang.ThrowableOperation;
-import org.cp.elements.util.stream.StreamUtils;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+
+import org.cp.elements.lang.ThrowableOperation;
+import org.cp.elements.util.stream.StreamUtils;
+
 import org.mockito.stubbing.Answer;
 
 /**
@@ -52,6 +53,8 @@ import org.mockito.stubbing.Answer;
  *
  * @author John Blum
  * @see org.junit.jupiter.api.Test
+ * @see org.junit.jupiter.api.extension.ExtensionContext
+ * @see org.junit.jupiter.api.extension.TestInstancePostProcessor
  * @see org.mockito.Mockito
  * @see org.cp.extensions.junit.jupiter.api.extension.ExtensionExceptionHandlingProcessor
  * @since 0.1.0
@@ -116,7 +119,7 @@ public class ExtensionExceptionHandlingProcessorUnitTests {
     RuntimeException cause = new RuntimeException("TEST");
 
     assertThatThrowableOfType(UnhandledExtensionException.class)
-      .isThrownBy(ThrowableOperation.from(args -> processor.getExceptionHandler()
+      .isThrownBy(ThrowableOperation.fromConsumer(args -> processor.getExceptionHandler()
         .orElseThrow(() -> newIllegalStateException("ExtensionExceptionHandler was null; O.o"))
         .handle(mockExtensionContext, cause)))
       .causedBy(RuntimeException.class)
@@ -296,7 +299,7 @@ public class ExtensionExceptionHandlingProcessorUnitTests {
     assertThat(processor.getExceptionHandler()).isPresent();
 
     assertThatThrowableOfType(UnhandledExtensionException.class)
-      .isThrownBy(ThrowableOperation.from(args ->
+      .isThrownBy(ThrowableOperation.fromVoidReturning(args ->
         processor.process(this, mockExtensionContext, mockTestInstancePostProcessor)))
       .causedBy(IllegalStateException.class)
       .havingMessage("TEST")
