@@ -6,13 +6,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>cp-extensions-bom</artifactId>
     <groupId>org.codeprimate</groupId>
+    <artifactId>cp-extensions-bom</artifactId>
     <version>0.1.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>junit-extensions</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>JUnit Extensions</name>
