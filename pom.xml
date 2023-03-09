@@ -50,6 +50,7 @@
 
 	<modules>
 		<module>junit-extensions</module>
+		<module>mockito-extensions</module>
 		<module>spring-extensions</module>
 	</modules>
 
