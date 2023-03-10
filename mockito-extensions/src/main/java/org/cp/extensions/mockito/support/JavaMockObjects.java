@@ -84,21 +84,35 @@ public abstract class JavaMockObjects {
 
     try {
 
-      AtomicBoolean cancelled = new AtomicBoolean(false);
-      AtomicBoolean done = new AtomicBoolean(false);
+      Object lock = new Object();
 
       Future<T> mockFuture = mock(Future.class, withSettings().strictness(Strictness.LENIENT));
 
-      // Technically not Thread-safe due to compound actions involving multiple variables.
-      // However, an actual Future implementation must interrupt the Thread executing the asynchronous task
-      // but in the act of interrupting the Thread, the task executing Thread may have completed.
-      Answer<Boolean> cancelAnswer = invocation -> !done.get()
-        && cancelled.compareAndSet(done.get(), true)
-        && done.compareAndSet(done.get(), true);
+      AtomicBoolean cancelled = new AtomicBoolean(false);
+      AtomicBoolean done = new AtomicBoolean(false);
 
+      // A Future can be cancelled only if not completed, it has not already been cancelled, and no exception was thrown
+      // while computing the result.
+      Answer<Boolean> cancelAnswer = invocation -> {
+
+        synchronized (lock) {
+          if (!done.get() && cancelled.compareAndSet(false, true)) {
+            done.set(true);
+            return true;
+          }
+
+          return false;
+        }
+      };
+
+      // NOTE: This get() Answer is used for both Future.get() and Future.get(timeout, :TimeUnit) operations,
+      // and since the result is already known ahead-of-time, the timeout is ignored,
+      // and no TimeoutException will be thrown.
       Answer<T> getAnswer = invocation -> {
 
-        done.set(true);
+        synchronized (lock) {
+          done.set(true);
+        }
 
         Assert.notInterrupted();
 
