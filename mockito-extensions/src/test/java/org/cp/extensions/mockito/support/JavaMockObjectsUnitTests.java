@@ -17,10 +17,13 @@ package org.cp.extensions.mockito.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.cp.elements.lang.ThrowableAssertions.assertThatThrowableOfType;
 
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +43,7 @@ public class JavaMockObjectsUnitTests {
   @Test
   public void mockFutureGetReturnsValue() throws Exception {
 
-    Future<String> mockFuture = JavaMockObjects.mockFuture("test");
+    Future<Object> mockFuture = JavaMockObjects.mockFuture("test");
 
     assertThat(mockFuture).isNotNull();
     assertThat(mockFuture).isNotCancelled();
@@ -55,21 +58,71 @@ public class JavaMockObjectsUnitTests {
   }
 
   @Test
-  public void mockFutureWasCancelled() {
+  public void mockFutureCancelledSuccessfully() {
 
-    Future<String> mockFuture = JavaMockObjects.mockFuture("test");
+    Future<Object> mockFuture = JavaMockObjects.mockFuture("test");
 
     assertThat(mockFuture).isNotNull();
     assertThat(mockFuture).isNotCancelled();
     assertThat(mockFuture).isNotDone();
     assertThat(mockFuture.cancel(true)).isTrue();
     assertThat(mockFuture).isCancelled();
+    assertThat(mockFuture).isDone();
+  }
+
+  @Test
+  public void mockFutureCannotBeCancelledTwice() {
+
+    Future<Object> mockFuture = JavaMockObjects.mockFuture("test");
+
+    assertThat(mockFuture).isNotNull();
+    assertThat(mockFuture).isNotCancelled();
     assertThat(mockFuture).isNotDone();
+    assertThat(mockFuture.cancel(false)).isTrue();
+    assertThat(mockFuture).isCancelled();
+    assertThat(mockFuture).isDone();
+    assertThat(mockFuture.cancel(true)).isFalse();
+    assertThat(mockFuture).isCancelled();
+    assertThat(mockFuture).isDone();
+  }
+
+  @Test
+  public void mockFutureCannotBeExecutedWhenCancelled() {
+
+    Future<Object> mockFuture = JavaMockObjects.mockFuture("test");
+
+    assertThat(mockFuture).isNotNull();
+    assertThat(mockFuture.cancel(true)).isTrue();
+    assertThat(mockFuture).isCancelled();
+    assertThat(mockFuture).isDone();
 
     assertThatExceptionOfType(CancellationException.class)
       .isThrownBy(mockFuture::get)
       .withMessage("Task [%s] was cancelled", mockFuture)
       .withNoCause();
+  }
+
+  @Test
+  public void mockFutureFailureThrowsExecutionException() {
+
+    Supplier<Object> value = () -> { throw new RuntimeException("error"); };
+
+    Future<Object> mockFuture = JavaMockObjects.mockFuture(value);
+
+    assertThat(mockFuture).isNotNull();
+
+    assertThatThrowableOfType(ExecutionException.class)
+      .isThrownBy(args -> mockFuture.get())
+      .havingMessage("Execution of task [%s] failed", mockFuture)
+      .causedBy(RuntimeException.class)
+      .havingMessage("error")
+      .withNoCause();
+
+    assertThat(mockFuture).isDone();
+    assertThat(mockFuture).isNotCancelled();
+    assertThat(mockFuture.cancel(true)).isFalse();
+    assertThat(mockFuture).isNotCancelled();
+    assertThat(mockFuture).isDone();
   }
 
   @Test
@@ -99,6 +152,10 @@ public class JavaMockObjectsUnitTests {
         .isThrownBy(mockFuture::get)
         .withMessage("Thread [Interrupted Thread calling Future.get()] was interrupted")
         .withNoCause();
+
+      assertThat(mockFuture.cancel(true)).isFalse();
+      assertThat(mockFuture).isNotCancelled();
+      assertThat(mockFuture).isDone();
     }
   }
 }

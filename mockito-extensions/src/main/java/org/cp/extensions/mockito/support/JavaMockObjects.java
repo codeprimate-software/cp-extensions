@@ -20,8 +20,10 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.withSettings;
 
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,6 +35,7 @@ import org.cp.elements.lang.annotation.NotNull;
 import org.cp.elements.lang.annotation.Nullable;
 import org.cp.elements.text.FormatUtils;
 
+import org.mockito.quality.Strictness;
 import org.mockito.stubbing.Answer;
 
 /**
@@ -84,11 +87,18 @@ public abstract class JavaMockObjects {
       AtomicBoolean cancelled = new AtomicBoolean(false);
       AtomicBoolean done = new AtomicBoolean(false);
 
-      Future<T> mockFuture = mock(Future.class);
+      Future<T> mockFuture = mock(Future.class, withSettings().strictness(Strictness.LENIENT));
 
-      Answer<Boolean> cancelAnswer = invocation -> cancelled.compareAndSet(done.get(), true);
+      // Technically not Thread-safe due to compound actions involving multiple variables.
+      // However, an actual Future implementation must interrupt the Thread executing the asynchronous task
+      // but in the act of interrupting the Thread, the task executing Thread may have completed.
+      Answer<Boolean> cancelAnswer = invocation -> !done.get()
+        && cancelled.compareAndSet(done.get(), true)
+        && done.compareAndSet(done.get(), true);
 
       Answer<T> getAnswer = invocation -> {
+
+        done.set(true);
 
         Assert.notInterrupted();
 
@@ -96,11 +106,13 @@ public abstract class JavaMockObjects {
           throw new CancellationException(String.format("Task [%s] was cancelled", mockFuture));
         }
 
-        T suppliedValue = value.get();
-
-        done.set(true);
-
-        return suppliedValue;
+        try {
+          return value.get();
+        }
+        catch (Throwable cause) {
+          String message = FormatUtils.format("Execution of task [%s] failed", mockFuture);
+          throw new ExecutionException(message, cause);
+        }
       };
 
       doAnswer(invocation -> cancelled.get()).when(mockFuture).isCancelled();
