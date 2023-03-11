@@ -17,15 +17,20 @@ package org.cp.extensions.mockito.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.cp.elements.lang.ThrowableAssertions.assertThatThrowableOfType;
+import static org.mockito.Mockito.doAnswer;
 
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Test;
+
+import org.cp.elements.lang.ObjectUtils;
 
 import edu.umd.cs.mtc.MultithreadedTestCase;
 import edu.umd.cs.mtc.TestFramework;
@@ -128,6 +133,47 @@ public class JavaMockObjectsUnitTests {
   @Test
   public void mockFutureWasInterrupted() throws Throwable {
     TestFramework.runOnce(new InterruptedThreadCallingFutureGetTestCase());
+  }
+
+  @Test
+  public void mockFutureWithNullSupplier() {
+
+    assertThatIllegalArgumentException()
+      .isThrownBy(() -> JavaMockObjects.mockFuture(null))
+      .withMessage("Supplier used to supply the value returned by the mock Future as the result is required")
+      .withNoCause();
+  }
+
+  @Test
+  public void customizeMockFunction() throws Exception {
+
+    AtomicBoolean done = new AtomicBoolean(false);
+    AtomicBoolean result = new AtomicBoolean(true);
+
+    Future<Boolean> mockFuture = JavaMockObjects.mockFuture(result.get(), future -> {
+
+      ObjectUtils.doOperationSafely(args -> doAnswer(invocation -> {
+        done.set(true);
+        return result.compareAndSet(true, false);
+      }).when(future).get(), result.get());
+
+      doAnswer(invocation -> done.get()).when(future).isDone();
+
+      return future;
+    });
+
+    assertThat(mockFuture).isNotNull();
+    assertThat(mockFuture).isNotCancelled();
+    assertThat(mockFuture).isNotDone();
+    assertThat(mockFuture.get()).isTrue();
+    assertThat(mockFuture).isNotCancelled();
+    assertThat(mockFuture).isDone();
+    assertThat(mockFuture.get()).isFalse();
+    assertThat(mockFuture).isNotCancelled();
+    assertThat(mockFuture).isDone();
+    assertThat(mockFuture.get()).isFalse();
+    assertThat(mockFuture).isNotCancelled();
+    assertThat(mockFuture).isDone();
   }
 
   @SuppressWarnings("unused")

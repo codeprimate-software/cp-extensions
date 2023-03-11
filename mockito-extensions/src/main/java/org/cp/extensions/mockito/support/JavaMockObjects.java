@@ -27,6 +27,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.cp.elements.function.FunctionUtils;
@@ -48,39 +49,37 @@ import org.mockito.stubbing.Answer;
 public abstract class JavaMockObjects {
 
   /**
-   * Creates a new mock {@link Future} object initialized with the given {@link Object value}
-   * returned by the mock {@link Future} as the asynchronous, computed result.
+   * Creates a new mock {@link Future} returning the given {@link Object result} as the asynchronous, computed value.
    *
-   * @param <T> {@link Class type} of {@link Object} returned by the mock {@link Future}.
-   * @param value {@link Object} returned by the mock {@link Future} as the asynchronous, computed result.
-   * @return a new mock {@link Future} that will return the given {@link Object value}.
-   * @throws IllegalArgumentException if the given {@link Supplier} is {@literal null}.
-   * @throws MockObjectException if the mock {@link Future} cannot be constructed.
+   * @param <T> {@link Class type} of {@link Object result} returned by the mock {@link Future}.
+   * @param result {@link Object value} returned by the mock {@link Future} as the asynchronous, computed result.
+   * @return a new mock {@link Future}.
+   * @throws MockObjectException if a mock {@link Future} cannot be created.
    * @see java.util.concurrent.Future
    * @see #mockFuture(Supplier)
    */
-  public static @NotNull <T> Future<T> mockFuture(@Nullable T value) {
-    return mockFuture(FunctionUtils.asSupplier(value));
+  public static @NotNull <T> Future<T> mockFuture(@Nullable T result) {
+    return mockFuture(FunctionUtils.asSupplier(result));
   }
 
   /**
-   * Creates a new mock {@link Future} object initialized with the given {@link Supplier} used to supply
-   * the {@link Object value} returned by the mock {@link Future} as the asynchronous, computed result.
+   * Creates a new mock {@link Future} returning the {@link Object result} from the given, required {@link Supplier}
+   * as the asynchronous, computed value.
    *
-   * @param <T> {@link Class type} of {@link Object} returned by the mock {@link Future}.
-   * @param value {@link Supplier} used to supply the {@link Object value} returned by the mock {@link Future};
-   * must not be {@literal null}.
-   * @return a new mock {@link Future} that will return a {@link Object value}
-   * supplied by the given {@link Supplier}.
+   * @param <T> {@link Class type} of {@link Object result} returned by the mock {@link Future}.
+   * @param result {@link Supplier} used to supply the {@link Object value} returned by the mock {@link Future}
+   * as the asynchronous, computed result; must not be {@literal null}.
+   * @return a new mock {@link Future}.
    * @throws IllegalArgumentException if the given {@link Supplier} is {@literal null}.
-   * @throws MockObjectException if the mock {@link Future} cannot be constructed.
+   * @throws MockObjectException if a mock {@link Future} cannot be created.
    * @see java.util.concurrent.Future
    * @see java.util.function.Supplier
    */
   @SuppressWarnings("unchecked")
-  public static @NotNull <T> Future<T> mockFuture(@NotNull Supplier<T> value) {
+  public static @NotNull <T> Future<T> mockFuture(@NotNull Supplier<T> result) {
 
-    Assert.notNull(value, "Supplier used to supply the value returned by the mock Future is required");
+    Assert.notNull(result,
+      "Supplier used to supply the value returned by the mock Future as the result is required");
 
     try {
 
@@ -121,7 +120,7 @@ public abstract class JavaMockObjects {
         }
 
         try {
-          return value.get();
+          return result.get();
         }
         catch (Throwable cause) {
           String message = FormatUtils.format("Execution of task [%s] failed", mockFuture);
@@ -139,7 +138,50 @@ public abstract class JavaMockObjects {
     }
     catch (Exception cause) {
       throw new MockObjectException(FormatUtils.format("Failed to create mock Future with value [%s]",
-        value), cause);
+        result), cause);
     }
+  }
+
+  /**
+   * Creates a new mock {@link Future} returning the given {@link Object result} as the asynchronous, computed value,
+   * customized by the given, required {@link Function}.
+   *
+   * @param <T> {@link Class type} of {@link Object result} returned by the mock {@link Future}.
+   * @param result {@link Object value} returned by the mock {@link Future} as the asynchronous, computed result.
+   * @param futureCustomizationFunction {@link Function} used to customize the new mock {@link Future};
+   * must not be {@literal null}.
+   * @return a new mock {@link Future}.
+   * @throws MockObjectException if a mock {@link Future} cannot be created.
+   * @see #mockFuture(Supplier, Function)
+   * @see java.util.concurrent.Future
+   * @see java.util.function.Function
+   */
+  public static @NotNull <T> Future<T> mockFuture(@Nullable T result,
+      @NotNull Function<Future<T>, Future<T>> futureCustomizationFunction) {
+
+    return mockFuture(FunctionUtils.asSupplier(result), futureCustomizationFunction);
+  }
+
+  /**
+   * Creates a new mock {@link Future} returning the {@link Object result} from the given, required {@link Supplier}
+   * as the asynchronous, computed value, customized by the given, required {@link Function}.
+   *
+   * @param <T> {@link Class type} of {@link Object result} returned by the mock {@link Future}.
+   * @param result {@link Supplier} used to supply the {@link Object value} returned by the mock {@link Future}
+   * as the asynchronous, computed result; must not be {@literal null}.
+   * @param futureCustomizationFunction {@link Function} used to customize the new mock {@link Future};
+   * must not be {@literal null}.
+   * @return a new mock {@link Future}.
+   * @throws IllegalArgumentException if the given {@link Supplier} is {@literal null}.
+   * @throws MockObjectException if a mock {@link Future} cannot be created.
+   * @see java.util.concurrent.Future
+   * @see java.util.function.Function
+   * @see java.util.function.Supplier
+   * @see #mockFuture(Supplier)
+   */
+  public static @NotNull <T> Future<T> mockFuture(@NotNull Supplier<T> result,
+      @NotNull Function<Future<T>, Future<T>> futureCustomizationFunction) {
+
+    return FunctionUtils.nullSafeFunction(futureCustomizationFunction).apply(mockFuture(result));
   }
 }
