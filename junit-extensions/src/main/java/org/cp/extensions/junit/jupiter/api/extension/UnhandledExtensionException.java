@@ -21,11 +21,9 @@ import org.cp.elements.lang.StringUtils;
 import org.cp.elements.lang.annotation.NotNull;
 import org.cp.elements.lang.annotation.Nullable;
 
-import org.junit.jupiter.api.extension.Extension;
-
 /**
  * A {@link RuntimeException} implementation representing an unhandled Exception thrown from
- * a JUnit Jupiter {@link Extension}.
+ * a JUnit Jupiter {@link org.junit.jupiter.api.extension.Extension}.
  *
  * @author John Blum
  * @see java.lang.RuntimeException
