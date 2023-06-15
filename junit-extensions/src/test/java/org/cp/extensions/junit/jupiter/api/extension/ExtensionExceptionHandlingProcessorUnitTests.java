@@ -18,7 +18,6 @@ package org.cp.extensions.junit.jupiter.api.extension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.cp.elements.lang.RuntimeExceptionsFactory.newIllegalStateException;
-import static org.cp.elements.lang.ThrowableAssertions.assertThatThrowableOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
@@ -43,6 +42,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
+import org.cp.elements.lang.ThrowableAssertions;
 import org.cp.elements.lang.ThrowableOperation;
 import org.cp.elements.util.stream.StreamUtils;
 
@@ -118,7 +118,7 @@ public class ExtensionExceptionHandlingProcessorUnitTests {
 
     RuntimeException cause = new RuntimeException("TEST");
 
-    assertThatThrowableOfType(UnhandledExtensionException.class)
+    ThrowableAssertions.assertThatThrowableOfType(UnhandledExtensionException.class)
       .isThrownBy(ThrowableOperation.fromConsumer(args -> processor.getExceptionHandler()
         .orElseThrow(() -> newIllegalStateException("ExtensionExceptionHandler was null; O.o"))
         .handle(mockExtensionContext, cause)))
@@ -298,7 +298,7 @@ public class ExtensionExceptionHandlingProcessorUnitTests {
     assertThat(processor).isNotNull();
     assertThat(processor.getExceptionHandler()).isPresent();
 
-    assertThatThrowableOfType(UnhandledExtensionException.class)
+    ThrowableAssertions.assertThatThrowableOfType(UnhandledExtensionException.class)
       .isThrownBy(ThrowableOperation.fromVoidReturning(args ->
         processor.process(this, mockExtensionContext, mockTestInstancePostProcessor)))
       .causedBy(IllegalStateException.class)

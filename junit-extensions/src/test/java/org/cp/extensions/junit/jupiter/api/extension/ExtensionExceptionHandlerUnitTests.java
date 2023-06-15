@@ -16,10 +16,9 @@
 package org.cp.extensions.junit.jupiter.api.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.cp.elements.lang.RuntimeExceptionsFactory.newIllegalStateException;
-import static org.cp.elements.lang.ThrowableAssertions.assertThatIllegalArgumentException;
-import static org.cp.elements.lang.ThrowableAssertions.assertThatIllegalStateException;
-import static org.cp.elements.lang.ThrowableAssertions.assertThatThrowableOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
@@ -30,10 +29,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-import org.cp.elements.lang.ThrowableOperation;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
+
+import org.cp.elements.lang.ThrowableAssertions;
+import org.cp.elements.lang.ThrowableOperation;
+
 import org.mockito.stubbing.Answer;
 
 /**
@@ -56,7 +57,7 @@ public class ExtensionExceptionHandlerUnitTests {
 
     assertThat(handler).isNotNull();
 
-    assertThatThrowableOfType(UnhandledExtensionException.class)
+    ThrowableAssertions.assertThatThrowableOfType(UnhandledExtensionException.class)
       .isThrownBy(args -> {
         handler.handle(mockExtensionContext, new RuntimeException("TEST"));
         return false;
@@ -78,12 +79,9 @@ public class ExtensionExceptionHandlerUnitTests {
 
     assertThat(handler).isNotNull();
 
-    assertThatThrowableOfType(UnhandledExtensionException.class)
-      .isThrownBy(args -> {
-        handler.handle(mockExtensionContext, null);
-        return false;
-      })
-      .havingMessage("Exception [null] was not handled")
+    assertThatExceptionOfType(UnhandledExtensionException.class)
+      .isThrownBy(() -> handler.handle(mockExtensionContext, null))
+      .withMessage("Exception [null] was not handled")
       .withNoCause();
 
     verifyNoInteractions(mockExtensionContext);
@@ -116,8 +114,8 @@ public class ExtensionExceptionHandlerUnitTests {
     doCallRealMethod().when(mockHandler).compose(any());
 
     assertThatIllegalArgumentException()
-      .isThrownBy(args -> mockHandler.compose(null))
-      .havingMessage("ExtensionExceptionHandler is required")
+      .isThrownBy(() -> mockHandler.compose(null))
+      .withMessage("ExtensionExceptionHandler is required")
       .withNoCause();
 
     verify(mockHandler, times(1)).compose(eq(null));
@@ -201,7 +199,7 @@ public class ExtensionExceptionHandlerUnitTests {
 
     assertThat(composedHandler).isNotNull();
 
-    assertThatThrowableOfType(UnhandledExtensionException.class)
+    ThrowableAssertions.assertThatThrowableOfType(UnhandledExtensionException.class)
       .isThrownBy(ThrowableOperation.fromConsumer(args -> composedHandler.handle(mockExtensionContext, cause)))
       .causedBy(RuntimeException.class)
       .havingMessage("TEST")
@@ -234,7 +232,7 @@ public class ExtensionExceptionHandlerUnitTests {
 
     assertThat(composedHandler).isNotNull();
 
-    assertThatIllegalStateException()
+    ThrowableAssertions.assertThatIllegalStateException()
       .isThrownBy(ThrowableOperation.fromConsumer(args -> composedHandler.handle(mockExtensionContext, cause)))
       .havingMessage("MOCK")
       .causedBy(RuntimeException.class)

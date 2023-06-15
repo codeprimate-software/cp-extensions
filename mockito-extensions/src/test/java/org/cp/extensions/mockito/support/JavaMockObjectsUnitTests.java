@@ -18,7 +18,6 @@ package org.cp.extensions.mockito.support;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
-import static org.cp.elements.lang.ThrowableAssertions.assertThatThrowableOfType;
 import static org.mockito.Mockito.doAnswer;
 
 import java.util.concurrent.CancellationException;
@@ -31,6 +30,7 @@ import java.util.function.Supplier;
 import org.junit.jupiter.api.Test;
 
 import org.cp.elements.lang.ObjectUtils;
+import org.cp.elements.lang.ThrowableAssertions;
 
 import edu.umd.cs.mtc.MultithreadedTestCase;
 import edu.umd.cs.mtc.TestFramework;
@@ -116,7 +116,7 @@ public class JavaMockObjectsUnitTests {
 
     assertThat(mockFuture).isNotNull();
 
-    assertThatThrowableOfType(ExecutionException.class)
+    ThrowableAssertions.assertThatThrowableOfType(ExecutionException.class)
       .isThrownBy(args -> mockFuture.get())
       .havingMessage("Execution of task [%s] failed", mockFuture)
       .causedBy(RuntimeException.class)
