@@ -56,7 +56,7 @@
 
 	<properties>
 		<java-module-name>codeprimate.extensions</java-module-name>
-		<cp-elements.version>1.0.2-SNAPSHOT</cp-elements.version>
+		<cp-elements.version>2.0.0-M1</cp-elements.version>
 		<junit-jupiter.version>5.9.2</junit-jupiter.version>
 	</properties>
 
