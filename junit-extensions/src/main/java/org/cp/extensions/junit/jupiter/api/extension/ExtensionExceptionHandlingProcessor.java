@@ -18,15 +18,15 @@ package org.cp.extensions.junit.jupiter.api.extension;
 import java.util.Arrays;
 import java.util.Optional;
 
+import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+
 import org.cp.elements.lang.Assert;
 import org.cp.elements.lang.annotation.NotNull;
 import org.cp.elements.lang.annotation.NullSafe;
 import org.cp.elements.util.ArrayUtils;
 import org.cp.elements.util.CollectionUtils;
-
-import org.junit.jupiter.api.extension.Extension;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
 /**
  * Processor for JUnit Jupiter {@link Extension Extensions} possibly handle any exceptions thrown by
