@@ -27,7 +27,7 @@ import org.springframework.test.context.ContextCustomizer;
  * Unit Tests for {@link DependencyOfContextCustomizerFactory}.
  *
  * @author John Blum
- * @see org.junit.Test
+ * @see org.junit.jupiter.api.Test
  * @see org.mockito.Mockito
  * @see org.cp.extensions.spring.test.context.DependencyOfContextCustomizerFactory
  * @since 1.0.0
