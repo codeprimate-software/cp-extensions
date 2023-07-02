@@ -55,7 +55,7 @@ public abstract class AbstractBeanInitializationOrderIntegrationTests extends Ab
   /**
    * Spring {@link BeanPostProcessor} that collects {@link String bean names} of beans defined/declared
    * and managed by the Spring container.
-   *
+   * <p>
    * The Spring {@link BeanPostProcessor} is {@link Iterable} over the {@link String bean names} it collects
    * during post-processing.
    *

@@ -41,7 +41,7 @@ public interface ExtensionExceptionHandler {
   /**
    * {@link ExtensionExceptionHandler} implementation that simply rethrows the original {@link Throwable cause}
    * {@link UnhandledExtensionException#wrap(Throwable) wrapped} in an {@link UnhandledExtensionException}.
-   *
+   * <p>
    * Useful as the last handler in a composition.
    *
    * @see UnhandledExtensionException#wrap(Throwable)
@@ -54,7 +54,7 @@ public interface ExtensionExceptionHandler {
 
   /**
    * Handles, or simply processes the {@link Throwable} object thrown by a JUnit Jupiter {@link Extension}.
-   *
+   * <p>
    * If this handler is unable to {@literal handle} the thrown {@link Throwable} object, then this handler should wrap
    * the {@link Throwable} object as the {@literal cause} of an {@link UnhandledExtensionException} and rethrow
    * the {@link UnhandledExtensionException} allowing additional handlers in a chain of handlers to possibly handle
@@ -70,7 +70,7 @@ public interface ExtensionExceptionHandler {
 
   /**
    * Composes this {@link ExtensionExceptionHandler} with the given, required {@link ExtensionExceptionHandler}.
-   *
+   * <p>
    * This {@link ExtensionExceptionHandler} is invoked first to handle the {@link Throwable} object thrown by
    * the JUnit Jupiter {@link Extension}, and if unsuccessful, and the {@link #handle(ExtensionContext, Throwable)}
    * method implementation appropriately throws an {@link UnhandledExtensionException} wrapping the original

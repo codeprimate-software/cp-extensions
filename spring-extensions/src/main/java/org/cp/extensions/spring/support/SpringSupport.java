@@ -110,10 +110,10 @@ public abstract class SpringSupport {
 
 	/**
 	 * Null-safe operation used to get the {@link Integer order} of the given {@link Object}.
-	 *
+	 * <p>
 	 * This method handles either the case when the given {@link Object} implements Spring's {@link Ordered} interface
 	 * or when the given {@link Object} is annotated with Spring's {@link Order @Order} annotation.
-	 *
+	 * <p>
 	 * If the {@link Object} reference is {@literal null} or the given {@link Object} is not ordered,
 	 * than {@literal null} is returned.
 	 *

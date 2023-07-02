@@ -67,7 +67,7 @@ public class DependencyOfBeanFactoryPostProcessor implements BeanFactoryPostProc
 	/**
 	 * Factory method used to register an instance of the {@link DependencyOfBeanFactoryPostProcessor} with
 	 * the given, required {@link ConfigurableApplicationContext}.
-	 *
+	 * <p>
 	 * The {@code registerWith(..)} factory method ensures only a single registration of
 	 * the {@link DependencyOfBeanFactoryPostProcessor} per {@link ConfigurableApplicationContext}.
 	 *
@@ -93,7 +93,7 @@ public class DependencyOfBeanFactoryPostProcessor implements BeanFactoryPostProc
 	/**
 	 * Post processes the {@link ConfigurableListableBeanFactory} by searching for managed beans that declare (claim)
 	 * to be a {@link DependencyOf dependency of} other beans managed inside the Spring container.
-	 *
+	 * <p>
 	 * Out-of-the-box, the Spring container does not support this configuration arrangement, and therefore, requires
 	 * additional processing to set up this inverse {@link DependsOn} relationship.
 	 *
@@ -146,7 +146,7 @@ public class DependencyOfBeanFactoryPostProcessor implements BeanFactoryPostProc
 
 	/**
 	 * Gets the {@literal value} attribute as a {@link String} array from the given {@link AnnotationAttributes}.
-	 *
+	 * <p>
 	 * The {@link AnnotationAttributes} correspond to a {@link DependencyOf} annotation declared on a bean definition
 	 * declared/defined and managed in the Spring container.
 	 *

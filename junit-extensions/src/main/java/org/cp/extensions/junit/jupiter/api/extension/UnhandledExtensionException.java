@@ -51,8 +51,8 @@ public class UnhandledExtensionException extends RuntimeException {
   public UnhandledExtensionException() { }
 
   /**
-   * Constructs a new instance of {@link UnhandledExtensionException} initialized with the given {@link String message}
-   * description the error.
+   * Constructs a new {@link UnhandledExtensionException} initialized with the given {@link String message}
+   * describing the error.
    *
    * @param message {@link String} containing a description of this exception.
    */
@@ -61,8 +61,8 @@ public class UnhandledExtensionException extends RuntimeException {
   }
 
   /**
-   * Constructs a new instance of {@link UnhandledExtensionException} initialized with the given {@link Throwable}
-   * used as the cause of this Exception.
+   * Constructs a new {@link UnhandledExtensionException} initialized with the given {@link Throwable} used as
+   * the cause of this Exception.
    *
    * @param cause {@link Throwable} object used as the cause of this exception.
    */
@@ -71,8 +71,8 @@ public class UnhandledExtensionException extends RuntimeException {
   }
 
   /**
-   * Constructs a new instance of {@link UnhandledExtensionException} initialized with the given {@link String message}
-   * description the error along with the given {@link Throwable} used as the cause of this Exception.
+   * Constructs a new {@link UnhandledExtensionException} initialized with the given {@link String message}
+   * describing the error along with the given {@link Throwable} used as the cause of this Exception.
    *
    * @param message {@link String} containing a description of this exception.
    * @param cause {@link Throwable} object used as the cause of this exception.

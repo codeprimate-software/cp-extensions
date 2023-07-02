@@ -38,7 +38,7 @@ import org.springframework.core.annotation.AliasFor;
  * However, when using the {@link DependencyOf} annotation, {@literal bean B} can declare that it is
  * a required dependency for {@literal bean A}, or rather that {@literal bean A} should {@literal depend on}
  * {@literal bean B}.
- *
+ * <p>
  * Therefore, the following bean definitions for A and B are equivalent:
  *
  * <pre>
@@ -87,7 +87,7 @@ import org.springframework.core.annotation.AliasFor;
  * and convention over configuration approach. Therefore, additional dependencies of {@literal bean A} can be added to
  * the configuration metadata automatically, over time, without having to go back and modify the bean definition for
  * {@literal bean A}. This can be especially useful during testing.
- *
+ * <p>
  * This feature is experimental.
  *
  * @author John Blum

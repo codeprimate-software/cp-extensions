@@ -44,7 +44,7 @@ import org.cp.elements.util.CollectionUtils;
 public interface ExtensionExceptionHandlingProcessor {
 
   /**
-   * Factory method used to construct a new instance of {@link ExtensionExceptionHandlingProcessor} initialized with
+   * Factory method used to construct a new {@link ExtensionExceptionHandlingProcessor} initialized with
    * the array of {@link ExtensionExceptionHandler ExtensionExceptionHandlers} composed in a composition.
    *
    * @param exceptionHandlers array of {@link ExtensionExceptionHandler} objects to compose in a composition.
@@ -59,11 +59,11 @@ public interface ExtensionExceptionHandlingProcessor {
   }
 
   /**
-   * Factory method used to construct a new instance of {@link ExtensionExceptionHandlingProcessor} initialized with
+   * Factory method used to construct a new {@link ExtensionExceptionHandlingProcessor} initialized with
    * the {@link Iterable} of {@link ExtensionExceptionHandler ExtensionExceptionHandlers} composed in a composition
    * and used to process {@link UnhandledExtensionException UnhandledExtensionExceptions} thrown by JUnit Jupiter
    * {@link Extension Extensions}.
-   *
+   * <p>
    * {@link ExtensionExceptionHandler ExtensionExceptionHandlers} are called in the order
    * returned by the {@link Iterable} object.
    *

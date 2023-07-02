@@ -26,13 +26,13 @@ package org.cp.extensions.mockito.support;
 public class MockObjectException extends RuntimeException {
 
   /**
-   * Constructs a new instance of {@link MockObjectException} having no {@link String message}
+   * Constructs a new {@link MockObjectException} having no {@link String message}
    * and no {@link Throwable cause}.
    */
   public MockObjectException() { }
 
   /**
-   * Constructs a new instance of {@link MockObjectException} initialized with the given {@link String mesage}
+   * Constructs a new {@link MockObjectException} initialized with the given {@link String mesage}
    * to describe this {@link RuntimeException}.
    *
    * @param message {@link String} describing this {@link RuntimeException}.
@@ -42,7 +42,7 @@ public class MockObjectException extends RuntimeException {
   }
 
   /**
-   * Constructs a new instance of {@link MockObjectException} initialized with the given {@link Throwable cause}
+   * Constructs a new {@link MockObjectException} initialized with the given {@link Throwable cause}
    * used as the underlying reason this {@link RuntimeException} was thrown.
    *
    * @param cause {@link Throwable} used as the underlying reason this {@link RuntimeException} was thrown.
@@ -52,7 +52,7 @@ public class MockObjectException extends RuntimeException {
   }
 
   /**
-   * Constructs a new instance of {@link MockObjectException} initialized with the given {@link String mesage}
+   * Constructs a new {@link MockObjectException} initialized with the given {@link String mesage}
    * to describe this {@link RuntimeException} along with a given {@link Throwable cause} for the reason
    * this {@link RuntimeException} was thrown.
    *
