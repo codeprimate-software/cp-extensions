@@ -21,7 +21,6 @@
 
   <properties>
     <java-module-name>codeprimate.extensions.junit</java-module-name>
-    <mockito.version>4.11.0</mockito.version>
   </properties>
 
   <dependencies>
