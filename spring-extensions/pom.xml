@@ -21,6 +21,7 @@
 
 	<properties>
 		<java-module-name>codeprimate.extensions.spring</java-module-name>
+		<google-findbugs.version>3.0.2</google-findbugs.version>
 		<log4j.version>2.20.0</log4j.version>
 		<logback.version>1.4.8</logback.version>
 		<spring-framework.version>5.3.28</spring-framework.version>
@@ -51,6 +52,12 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>${google-findbugs.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
