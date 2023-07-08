@@ -23,7 +23,6 @@
 		<java-module-name>codeprimate.extensions.spring</java-module-name>
 		<log4j.version>2.20.0</log4j.version>
 		<logback.version>1.4.8</logback.version>
-		<mockito.version>4.11.0</mockito.version>
 		<spring-framework.version>5.3.28</spring-framework.version>
 	</properties>
 
